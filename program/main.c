@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h> 
 #include "lista.h"
 
 int size_VC = 0;
@@ -9,21 +10,25 @@ int size_VC = 0;
 int vertexCover(lista_t **listaAdjacencia,int n,int vertex){
 	printf("Vertice == %d \n",vertex);
 	if (listaAdjacencia[vertex]->tamanho == 0)
-		return -2;
-	int  addAtualNode = 0;
-	//int mult = 1;
-	for (int i = 0;i < listaAdjacencia[vertex]->tamanho;i++){
-		int a = vertexCover( listaAdjacencia,n,acessar(listaAdjacencia[vertex],i) );
-		//mult *= a; 
-		if (a == -2)
-			addAtualNode = 1;	
-	}
-	//if (mult == 1)
-	//	return -1;
-	if (addAtualNode == 1){
-		size_VC++;
 		return 1;
+	//int  addAtualNode = 0;
+	int a = 1;
+	for (int i = 0;i < listaAdjacencia[vertex]->tamanho;i++){
+		a *= vertexCover( listaAdjacencia,n,acessar(listaAdjacencia[vertex],i) );
 	}
+	if (a == (int)pow(2,listaAdjacencia[vertex]->tamanho)){
+		printf("______ %d\n",vertex);
+		limpar_lista(listaAdjacencia[vertex]);
+		return 3;
+	}
+	if (a == 1){
+		//no colocado no set cover
+		printf("XXXXX == %d\n",vertex);
+		size_VC++;
+		limpar_lista(listaAdjacencia[vertex]);
+		return 2;
+	}
+	
 	return 0;
 }
 
@@ -71,6 +76,12 @@ int main(int argc,char *argv[]){
 	//}
 	vertexCover(listaAdjacencia,n,0);
 	printf("VertexCover == %d\n",size_VC);
+	for (int i = 0;i < n;i++){
+		printf("lista  : %d\n  ",i);
+		imprimir_lista(listaAdjacencia[i]);
+		printf(" \n");
+	}
+
 	//printf(vertexCover(listaAdjacencia,n,0));
 	return 0;
 }
