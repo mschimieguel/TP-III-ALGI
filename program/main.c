@@ -7,17 +7,22 @@ int size_VC = 0;
 //int VisitedNodes[n];
 
 int vertexCover(lista_t **listaAdjacencia,int n,int vertex){
+	printf("Vertice == %d \n",vertex);
 	if (listaAdjacencia[vertex]->tamanho == 0)
-		return -1;
+		return -2;
 	int  addAtualNode = 0;
+	//int mult = 1;
 	for (int i = 0;i < listaAdjacencia[vertex]->tamanho;i++){
 		int a = vertexCover( listaAdjacencia,n,acessar(listaAdjacencia[vertex],i) );
-		if (a == -1)
+		//mult *= a; 
+		if (a == -2)
 			addAtualNode = 1;	
 	}
+	//if (mult == 1)
+	//	return -1;
 	if (addAtualNode == 1){
 		size_VC++;
-		//return -1;
+		return 1;
 	}
 	return 0;
 }
@@ -41,7 +46,7 @@ int main(int argc,char *argv[]){
 	int a,b;
 	for (int i = 0;i < m;i++){
 		fscanf(ARQ,"%d %d",&a,&b);
-		adicionar_elemento_inicio(listaAdjacencia[a],b);
+		adicionar_elemento_fim(listaAdjacencia[a],b);
 		//printf("a == %d , b == %d \n",a,b);
 	}
 
@@ -59,12 +64,11 @@ int main(int argc,char *argv[]){
 		printf("Por favor execute novamente e passe como primeiro parametro tarefa1 ou tarefa2 \n");
 		return 0;
 	}
-
-	for (int i = 0;i < n;i++){
-		printf("lista  : %d\n  ",i);
-		imprimir_lista(listaAdjacencia[i]);
-		printf(" \n");
-	}
+	//for (int i = 0;i < n;i++){
+	//	printf("lista  : %d\n  ",i);
+	//	imprimir_lista(listaAdjacencia[i]);
+	//	printf(" \n");
+	//}
 	vertexCover(listaAdjacencia,n,0);
 	printf("VertexCover == %d\n",size_VC);
 	//printf(vertexCover(listaAdjacencia,n,0));
