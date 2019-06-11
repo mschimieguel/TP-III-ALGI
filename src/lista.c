@@ -143,7 +143,8 @@ void imprimir_lista(lista_t *lista){
         printf("};\n");
     }
     else 
-        printf("tamanho == 0; elementos == {}\n");    
+        printf("lista vazia \n");
+    //printf("tamanho == 0; elementos == {}\n");    
 }
 int busca_valor(lista_t *lista, int valor){
 	if (lista->head == NULL){
