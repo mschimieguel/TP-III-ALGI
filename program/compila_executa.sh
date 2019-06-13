@@ -1,5 +1,4 @@
 #!/bin/bash
-ls
 make clean
 make
 if [ $3 == 1 ];then
