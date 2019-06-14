@@ -84,16 +84,13 @@ int main(int argc,char *argv[]){
 			VisitedNodes[i][0] = -1;VisitedNodes[i][1] = -1;
 			parent[i] = -1;
 		}
-		//vertexCover(listaAdjacencia,n,0);
-		//printf("VertexCover == %d\n",size_VC);
-		// for (int i = 0;i < n;i++){
-		// 	printf("lista  : %d\n  ",i);
-		// 	imprimir_lista(listaAdjacencia[i]);
-		// 	printf(" \n");
-		// }
-		int to_return =min( VertexCoverTree(listaAdjacencia,0,0),VertexCoverTree(listaAdjacencia,0,1));
+		int to_return = min( VertexCoverTree(listaAdjacencia,0,0),VertexCoverTree(listaAdjacencia,0,1));
 		printf("%d\n",to_return);
-		return to_return;
+		free(parent);
+		for (int i = 0;i < n;i++)
+			free(VisitedNodes[i]);
+		free(VisitedNodes);
+		return 0;
 	}
 	else if ( strcmp(tarefa,"tarefa2") == 0 ){
 		//realizar tarefa2 {"heuristica","solucao ate 2 vezes pior que a otima","grafo pode conter ciclos"}
@@ -102,10 +99,11 @@ int main(int argc,char *argv[]){
 			parent[i] = 0;
 		int to_return = VertexCoverHeuristic(listaAdjacencia,n,m);
 		printf("%d\n",to_return);
-		for (int i = 0;i < n;i++)
-			if(parent[i] == 1)
-				printf("%d\n",i);
-		return to_return;
+		// for (int i = 0;i < n;i++)
+		// 	if(parent[i] == 1)
+		// 		printf("%d\n",i);
+		free(parent);
+		return 0;
 	}
 	else {
 		printf("Por favor execute novamente e passe como primeiro parametro tarefa1 ou tarefa2 \n");
