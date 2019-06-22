@@ -75,8 +75,8 @@ void adicionar_elemento(lista_t *lista,int valor,int pos){
 int retirar_elemento_inicio(lista_t *lista){
     
     node_t *tofree = lista->head;
-    int toreturn=tofree->valor;
-    lista->head=lista->head->next;
+    int toreturn = tofree->valor;
+    lista->head = lista->head->next;
     lista->tamanho--;
 
     free(tofree);

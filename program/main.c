@@ -7,8 +7,40 @@
 int **VisitedNodes;
 int *parent;
 
+int eliminar(int elemento,lista_t **listaAdjacencia,int pos){
+	printf("A%d\n",pos);
+	if (listaAdjacencia[pos]->tamanho > 0){
+		if(listaAdjacencia[pos]->head->valor == elemento){
+			printf("B%d\n",pos);
+			return retirar_elemento_inicio (listaAdjacencia[pos]);
+		}
+		else if (listaAdjacencia[pos]->tail->valor == elemento){
+			printf("C%d\n",pos);
+			return retirar_elemento_fim (listaAdjacencia[pos]);
+		}
+		else {
+			printf("D%d\n",pos);
+			node_t *atual = listaAdjacencia[pos]->head;
+	        node_t *tofree = NULL;
+
+	        while (atual->next != listaAdjacencia[pos]->tail){
+	        	if (atual->next->valor == elemento)
+	        		break;
+	            atual=atual->next;
+	        }
+	        tofree = atual->next;
+	        atual->next = tofree->next;
+	        listaAdjacencia[pos]->tamanho--;
+	        int toreturn = tofree->valor;
+	        free(tofree);
+	        return toreturn;
+		}
+	}
+	return -1;
+}
 int VertexCoverHeuristic(lista_t **listaAdjacencia,int n,int m){
 	int v = 0;
+	//lista_t *unvisitednodes = createlist();
 	while(m > 0){
 		for(int i = 0;i < n;i++){
 			if(listaAdjacencia[i]->tamanho > 0){
@@ -16,8 +48,16 @@ int VertexCoverHeuristic(lista_t **listaAdjacencia,int n,int m){
 				parent[i] = 1;
 				m -= listaAdjacencia[i]->tamanho;
 				m -=listaAdjacencia[listaAdjacencia[i]->head->valor]->tamanho;
+				for(int j = 0;j < listaAdjacencia[i]->head->valor ;j++){
+					if (j != i){
+						printf ("Eliminado : %d\n",eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,j));
+						m--;
+					}
+
+				}
 				limpar_lista(listaAdjacencia[listaAdjacencia[i]->head->valor]);
 				limpar_lista(listaAdjacencia[i]);
+				
 				v += 2;
 			}
 		}
