@@ -8,6 +8,7 @@ int **VisitedNodes;
 int *parent;
 
 int eliminar(int elemento,lista_t **listaAdjacencia,int pos){
+	printf("Elemento == %d\n",elemento);
 	printf("A%d\n",pos);
 	if (listaAdjacencia[pos]->tamanho > 0){
 		if(listaAdjacencia[pos]->head->valor == elemento){
@@ -19,20 +20,24 @@ int eliminar(int elemento,lista_t **listaAdjacencia,int pos){
 			return retirar_elemento_fim (listaAdjacencia[pos]);
 		}
 		else {
+			if (listaAdjacencia[pos]->tamanho <= 2)
+				return -1;
 			printf("D%d\n",pos);
 			node_t *atual = listaAdjacencia[pos]->head;
 	        node_t *tofree = NULL;
-
+	        printf("erro 1 %d\n",listaAdjacencia[pos]->tamanho);
 	        while (atual->next != listaAdjacencia[pos]->tail){
 	        	if (atual->next->valor == elemento)
 	        		break;
 	            atual=atual->next;
 	        }
+	        //printf("erro 2\n");
 	        tofree = atual->next;
 	        atual->next = tofree->next;
 	        listaAdjacencia[pos]->tamanho--;
 	        int toreturn = tofree->valor;
 	        free(tofree);
+	        printf("erro 3\n");
 	        return toreturn;
 		}
 	}
