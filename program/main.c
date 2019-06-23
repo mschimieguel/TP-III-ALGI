@@ -81,9 +81,10 @@ int VertexCoverTree(lista_t **listaAdjacencia,int atualNode,int isVertexCover){
 		return VisitedNodes[atualNode][isVertexCover];
 	else{
 		int soma = 0;
+		node_t *atual = listaAdjacencia[atualNode]->head;
 		for (int i = 0;i < listaAdjacencia[atualNode]->tamanho;i++){
 
-			int node = acessar(listaAdjacencia[atualNode],i);
+			int node = atual->valor;//acessar(listaAdjacencia[atualNode],i);
 			//printf("%d\n",i);
 			if(node != parent[atualNode]){
 				parent[node] = atualNode;
@@ -92,6 +93,7 @@ int VertexCoverTree(lista_t **listaAdjacencia,int atualNode,int isVertexCover){
 				else
 					soma += min( VertexCoverTree(listaAdjacencia,node,0),VertexCoverTree(listaAdjacencia,node,1) );
 			}
+			atual =atual->next;
 		}
 		VisitedNodes[atualNode][isVertexCover] = soma + isVertexCover;
 		return VisitedNodes[atualNode][isVertexCover];
