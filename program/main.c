@@ -8,36 +8,29 @@ int **VisitedNodes;
 int *parent;
 
 int eliminar(int elemento,lista_t **listaAdjacencia,int pos){
-	//printf("Elemento == %d\n",elemento);
-	//printf("A%d\n",pos);
+	//retira uma aresta elemento de uma lista encadeda na posicao pos do vetor de listas
 	if (listaAdjacencia[pos]->tamanho > 0){
 		if(listaAdjacencia[pos]->head->valor == elemento){
-			//printf("B%d\n",pos);
 			return retirar_elemento_inicio (listaAdjacencia[pos]);
 		}
 		else if (listaAdjacencia[pos]->tail->valor == elemento){
-			//printf("C%d\n",pos);
 			return retirar_elemento_fim (listaAdjacencia[pos]);
 		}
 		else {
 			if (listaAdjacencia[pos]->tamanho <= 2)
 				return -1;
-			//printf("D%d\n",pos);
 			node_t *atual = listaAdjacencia[pos]->head;
 	        node_t *tofree = NULL;
-	        //printf("erro 1 %d\n",listaAdjacencia[pos]->tamanho);
 	        while (atual->next != listaAdjacencia[pos]->tail){
 	        	if (atual->next->valor == elemento)
 	        		break;
 	            atual=atual->next;
 	        }
-	        //printf("erro 2\n");
 	        tofree = atual->next;
 	        atual->next = tofree->next;
 	        listaAdjacencia[pos]->tamanho--;
 	        int toreturn = tofree->valor;
 	        free(tofree);
-	        //printf("erro 3\n");
 	        return toreturn;
 		}
 	}
@@ -45,7 +38,6 @@ int eliminar(int elemento,lista_t **listaAdjacencia,int pos){
 }
 int VertexCoverHeuristic(lista_t **listaAdjacencia,int n,int m){
 	int v = 0;
-	//lista_t *unvisitednodes = createlist();
 	while(m > 0){
 		for(int i = 0;i < n;i++){
 			if(listaAdjacencia[i]->tamanho > 0){
@@ -53,30 +45,22 @@ int VertexCoverHeuristic(lista_t **listaAdjacencia,int n,int m){
 				parent[i] = 1;
 				m -= listaAdjacencia[i]->tamanho;
 				m -=listaAdjacencia[listaAdjacencia[i]->head->valor]->tamanho;
-				
-				// for(int j = 0;j < listaAdjacencia[i]->head->valor ;j++){
-				// 	if (j != i){
-				// 		eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,j);
-				// 		//printf ("Eliminado : %d\n",);
-				// 		m--;
-				// 	}
-				// // }
-				// node_t *atual = listaAdjacencia[i]->head;
-				// //caminhando na lista i
-				// for (int j = 0;j < listaAdjacencia[i]->tamanho;j++){
-				// 	if(atual->valor != listaAdjacencia[i]->head->valor)
-				// 		eliminar(i,listaAdjacencia,atual->valor);
-				// 	atual = atual->next;
-				// }
-
-				// atual = listaAdjacencia[listaAdjacencia[i]->head->valor]->head;
-				// // caminhando na lista 'listaAdjacencia[i]->head->valor'
-				// for (int j = 0;j < listaAdjacencia[listaAdjacencia[i]->head->valor]->tamanho;j++){
-				// 	if(atual->valor != i)
-				// 		eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,atual->valor);
-				// 	atual = atual->next;
-				// }
-
+			
+				node_t *atual = listaAdjacencia[i]->head;
+				//caminhando na lista i para remover as arestas
+				for (int j = 0;j < listaAdjacencia[i]->tamanho;j++){
+					if(atual->valor != listaAdjacencia[i]->head->valor)
+						eliminar(i,listaAdjacencia,atual->valor);
+					atual = atual->next;
+				}
+				atual = listaAdjacencia[listaAdjacencia[i]->head->valor]->head;
+				// caminhando na lista 'listaAdjacencia[i]->head->valor' para remover as arestas
+				for (int j = 0;j < listaAdjacencia[listaAdjacencia[i]->head->valor]->tamanho;j++){
+					if(atual->valor != i)
+						eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,atual->valor);
+					atual = atual->next;
+				}
+				//fzendo com que 
 				limpar_lista(listaAdjacencia[listaAdjacencia[i]->head->valor]);
 				limpar_lista(listaAdjacencia[i]);
 				
@@ -95,14 +79,13 @@ int VertexCoverTree(lista_t **listaAdjacencia,int atualNode,int isVertexCover){
 	if (listaAdjacencia[atualNode]->tamanho == 0)
 		return isVertexCover;
 	else if (VisitedNodes[atualNode][isVertexCover] != -1)
-		return VisitedNodes[atualNode][isVertexCover];
+		return VisitedNodes[atualNode][isVertexCover];//retorna o valor ja calculado
 	else{
 		int soma = 0;
 		node_t *aux = listaAdjacencia[atualNode]->head;
 		for (int i = 0;i < listaAdjacencia[atualNode]->tamanho;i++){
 
-			int element = aux->valor;//acessar(listaAdjacencia[atualNode],i);
-			//printf("%d\n",i);
+			int element = aux->valor;
 			if(element != parent[atualNode]){
 				//se element não for o pai de atualnode entao atualnode é o pai de element 
 				parent[element] = atualNode;
@@ -132,17 +115,16 @@ int main(int argc,char *argv[]){
 	for (int i = 0;i < n;i++)
 		listaAdjacencia[i] = createlist();
 
-	//considerando que a representaçao da aresta (a,b) a < b no arq de entrada
+
 	int a,b;
 	for (int i = 0;i < m;i++){
 		fscanf(ARQ,"%d %d",&a,&b);
 		adicionar_elemento_fim(listaAdjacencia[a],b);
-		//adicionar_elemento_fim(listaAdjacencia[b],a);
+		adicionar_elemento_fim(listaAdjacencia[b],a);
 	}
 
 	//definindo qual tarefa deve ser feita
 	if ( strcmp(tarefa,"tarefa1") == 0 ){
-		//realizar tarefa {"Solucao otima","grafo sem ciclos","tempo max 2 segundos"}
 		VisitedNodes = (int**)malloc(n*sizeof(int*));
 		parent = (int*)malloc(n*sizeof(int));
 		for (int i = 0; i < n;i++){
@@ -159,15 +141,14 @@ int main(int argc,char *argv[]){
 		return 0;
 	}
 	else if ( strcmp(tarefa,"tarefa2") == 0 ){
-		//realizar tarefa2 {"heuristica","solucao ate 2 vezes pior que a otima","grafo pode conter ciclos"}
 		parent = (int*)malloc(n*sizeof(int));
 		for(int i = 0;i < n;i++)
 			parent[i] = 0;
 		int to_return = VertexCoverHeuristic(listaAdjacencia,n,m);
 		printf("%d\n",to_return);
-		// for (int i = 0;i < n;i++)
-		// 	if(parent[i] == 1)
-		// 		printf("%d\n",i);
+		for (int i = 0;i < n;i++)
+		 	if(parent[i] == 1)
+		 		printf("%d\n",i);
 		free(parent);
 		return 0;
 	}
