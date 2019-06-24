@@ -53,13 +53,30 @@ int VertexCoverHeuristic(lista_t **listaAdjacencia,int n,int m){
 				parent[i] = 1;
 				m -= listaAdjacencia[i]->tamanho;
 				m -=listaAdjacencia[listaAdjacencia[i]->head->valor]->tamanho;
-				for(int j = 0;j < listaAdjacencia[i]->head->valor ;j++){
-					if (j != i){
-						eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,j);
-						//printf ("Eliminado : %d\n",);
-						m--;
-					}
-				}
+				
+				// for(int j = 0;j < listaAdjacencia[i]->head->valor ;j++){
+				// 	if (j != i){
+				// 		eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,j);
+				// 		//printf ("Eliminado : %d\n",);
+				// 		m--;
+				// 	}
+				// // }
+				// node_t *atual = listaAdjacencia[i]->head;
+				// //caminhando na lista i
+				// for (int j = 0;j < listaAdjacencia[i]->tamanho;j++){
+				// 	if(atual->valor != listaAdjacencia[i]->head->valor)
+				// 		eliminar(i,listaAdjacencia,atual->valor);
+				// 	atual = atual->next;
+				// }
+
+				// atual = listaAdjacencia[listaAdjacencia[i]->head->valor]->head;
+				// // caminhando na lista 'listaAdjacencia[i]->head->valor'
+				// for (int j = 0;j < listaAdjacencia[listaAdjacencia[i]->head->valor]->tamanho;j++){
+				// 	if(atual->valor != i)
+				// 		eliminar(listaAdjacencia[i]->head->valor,listaAdjacencia,atual->valor);
+				// 	atual = atual->next;
+				// }
+
 				limpar_lista(listaAdjacencia[listaAdjacencia[i]->head->valor]);
 				limpar_lista(listaAdjacencia[i]);
 				
@@ -120,6 +137,7 @@ int main(int argc,char *argv[]){
 	for (int i = 0;i < m;i++){
 		fscanf(ARQ,"%d %d",&a,&b);
 		adicionar_elemento_fim(listaAdjacencia[a],b);
+		//adicionar_elemento_fim(listaAdjacencia[b],a);
 	}
 
 	//definindo qual tarefa deve ser feita
